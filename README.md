@@ -19,12 +19,13 @@ gem install bundler -v 2.2.3
 # confirm correct version is active
 gem list bundler
 bundle -v
+# set bundle's path
+bundle config set path vendor/bundle
 ```
 
-## CocoaPods
-Install CocoaPods through bundler
+## Install gem dependencies (e.g. CocoaPods)
+Install gem dependencies through bundler
 ```zsh
-bundle config set path vendor/bundle
 bundle _2.2.3_ install
 ```
 
