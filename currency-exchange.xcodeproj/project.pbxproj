@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6EB47758278E63FC00B27ADF /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 6EB47757278E63FC00B27ADF /* ComposableArchitecture */; };
 		6EEB844B278E542C00A29884 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB844A278E542C00A29884 /* Tests_iOS.swift */; };
 		6EEB844D278E542C00A29884 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB844C278E542C00A29884 /* Tests_iOSLaunchTests.swift */; };
 		6EEB8457278E542C00A29884 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8456278E542C00A29884 /* Tests_macOS.swift */; };
@@ -70,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EB47758278E63FC00B27ADF /* ComposableArchitecture in Frameworks */,
 				B928710C70D7165E431DA94F /* Pods_currency_exchange__iOS_.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -178,7 +180,6 @@
 				2F459A123BB3A25E9C14A18D /* Pods-currency-exchange (macOS).debug.xcconfig */,
 				BF941AD1C58F02F585F9E594 /* Pods-currency-exchange (macOS).release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -200,6 +201,9 @@
 			dependencies = (
 			);
 			name = "currency-exchange (iOS)";
+			packageProductDependencies = (
+				6EB47757278E63FC00B27ADF /* ComposableArchitecture */,
+			);
 			productName = "currency-exchange (iOS)";
 			productReference = 6EEB8439278E542C00A29884 /* currency-exchange.app */;
 			productType = "com.apple.product-type.application";
@@ -293,6 +297,9 @@
 				Base,
 			);
 			mainGroup = 6EEB8429278E542B00A29884;
+			packageReferences = (
+				6EB47756278E63FC00B27ADF /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			productRefGroup = 6EEB843A278E542C00A29884 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -809,6 +816,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6EB47756278E63FC00B27ADF /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6EB47757278E63FC00B27ADF /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6EB47756278E63FC00B27ADF /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		6EEB842F278E542B00A29884 /* currency_exchange.xcdatamodeld */ = {
