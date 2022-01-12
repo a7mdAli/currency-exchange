@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6EB47758278E63FC00B27ADF /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 6EB47757278E63FC00B27ADF /* ComposableArchitecture */; };
+		6EB4775D278E675400B27ADF /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB4775C278E675400B27ADF /* R.generated.swift */; };
+		6EB4775E278E675400B27ADF /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB4775C278E675400B27ADF /* R.generated.swift */; };
 		6EEB844B278E542C00A29884 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB844A278E542C00A29884 /* Tests_iOS.swift */; };
 		6EEB844D278E542C00A29884 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB844C278E542C00A29884 /* Tests_iOSLaunchTests.swift */; };
 		6EEB8457278E542C00A29884 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8456278E542C00A29884 /* Tests_macOS.swift */; };
@@ -48,6 +50,7 @@
 		2F459A123BB3A25E9C14A18D /* Pods-currency-exchange (macOS).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-currency-exchange (macOS).debug.xcconfig"; path = "Target Support Files/Pods-currency-exchange (macOS)/Pods-currency-exchange (macOS).debug.xcconfig"; sourceTree = "<group>"; };
 		51B151EDE6156A2A434C8DF4 /* Pods_currency_exchange__macOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_currency_exchange__macOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C3A4BBD460D1EFA2738788E /* Pods_currency_exchange__iOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_currency_exchange__iOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EB4775C278E675400B27ADF /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		6EEB8430278E542B00A29884 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		6EEB8431278E542B00A29884 /* CurrencyExchangeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeApp.swift; sourceTree = "<group>"; };
 		6EEB8432278E542B00A29884 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,9 +113,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		6EB4775B278E674200B27ADF /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				6EB4775C278E675400B27ADF /* R.generated.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		6EEB8429278E542B00A29884 = {
 			isa = PBXGroup;
 			children = (
+				6EB4775B278E674200B27ADF /* Generated */,
 				6EEB842E278E542B00A29884 /* Shared */,
 				6EEB8440278E542C00A29884 /* macOS */,
 				6EEB8449278E542C00A29884 /* Tests iOS */,
@@ -191,6 +203,7 @@
 			buildConfigurationList = 6EEB8466278E542C00A29884 /* Build configuration list for PBXNativeTarget "currency-exchange (iOS)" */;
 			buildPhases = (
 				EC40C82B7DCE7658EA949BBA /* [CP] Check Pods Manifest.lock */,
+				6EB47759278E65B200B27ADF /* R.swift script */,
 				6EEB8435278E542C00A29884 /* Sources */,
 				6EEB8436278E542C00A29884 /* Frameworks */,
 				6EEB8437278E542C00A29884 /* Resources */,
@@ -213,6 +226,7 @@
 			buildConfigurationList = 6EEB8469278E542C00A29884 /* Build configuration list for PBXNativeTarget "currency-exchange (macOS)" */;
 			buildPhases = (
 				F563DE4DB4C79EBFF3FA1533 /* [CP] Check Pods Manifest.lock */,
+				6EB4775A278E65D100B27ADF /* R.swift script */,
 				6EEB843B278E542C00A29884 /* Sources */,
 				6EEB843C278E542C00A29884 /* Frameworks */,
 				6EEB843D278E542C00A29884 /* Resources */,
@@ -348,6 +362,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		1743F22B9A9E11ED98CA1493 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -361,7 +376,46 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-currency-exchange (iOS)/Pods-currency-exchange (iOS)-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+		};
+		6EB47759278E65B200B27ADF /* R.swift script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "R.swift script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+		};
+		6EB4775A278E65D100B27ADF /* R.swift script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "R.swift script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
 		};
 		EC40C82B7DCE7658EA949BBA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -416,6 +470,7 @@
 			files = (
 				6EEB845A278E542C00A29884 /* currency_exchange.xcdatamodeld in Sources */,
 				6EEB8460278E542C00A29884 /* Persistence.swift in Sources */,
+				6EB4775D278E675400B27ADF /* R.generated.swift in Sources */,
 				6EEB845C278E542C00A29884 /* CurrencyExchangeApp.swift in Sources */,
 				6EEB845E278E542C00A29884 /* ContentView.swift in Sources */,
 			);
@@ -427,6 +482,7 @@
 			files = (
 				6EEB845B278E542C00A29884 /* currency_exchange.xcdatamodeld in Sources */,
 				6EEB8461278E542C00A29884 /* Persistence.swift in Sources */,
+				6EB4775E278E675400B27ADF /* R.generated.swift in Sources */,
 				6EEB845D278E542C00A29884 /* CurrencyExchangeApp.swift in Sources */,
 				6EEB845F278E542C00A29884 /* ContentView.swift in Sources */,
 			);
