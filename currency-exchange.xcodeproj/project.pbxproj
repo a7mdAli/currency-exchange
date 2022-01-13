@@ -19,6 +19,7 @@
 		6EC71477279071E8009ECE13 /* APIRequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC71473279070A9009ECE13 /* APIRequestProtocol.swift */; };
 		6EC71478279071E8009ECE13 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC7147127906D09009ECE13 /* APIClient.swift */; };
 		6EC71479279071E8009ECE13 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC71475279070B6009ECE13 /* HTTPMethod.swift */; };
+		6EC7148127908616009ECE13 /* CurrencyLayerAPIKey.generated.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EC7148027908616009ECE13 /* CurrencyLayerAPIKey.generated.plist */; };
 		6EEB844B278E542C00A29884 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB844A278E542C00A29884 /* Tests_iOS.swift */; };
 		6EEB844D278E542C00A29884 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB844C278E542C00A29884 /* Tests_iOSLaunchTests.swift */; };
 		6EEB8457278E542C00A29884 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8456278E542C00A29884 /* Tests_macOS.swift */; };
@@ -65,6 +66,7 @@
 		6EC7147127906D09009ECE13 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		6EC71473279070A9009ECE13 /* APIRequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestProtocol.swift; sourceTree = "<group>"; };
 		6EC71475279070B6009ECE13 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
+		6EC7148027908616009ECE13 /* CurrencyLayerAPIKey.generated.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CurrencyLayerAPIKey.generated.plist; sourceTree = "<group>"; };
 		6EEB8430278E542B00A29884 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		6EEB8431278E542B00A29884 /* CurrencyExchangeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeApp.swift; sourceTree = "<group>"; };
 		6EEB8432278E542B00A29884 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 		6EB4775B278E674200B27ADF /* Generated */ = {
 			isa = PBXGroup;
 			children = (
+				6EC7148027908616009ECE13 /* CurrencyLayerAPIKey.generated.plist */,
 				6EB4775C278E675400B27ADF /* R.generated.swift */,
 			);
 			path = Generated;
@@ -246,6 +249,7 @@
 			buildConfigurationList = 6EEB8466278E542C00A29884 /* Build configuration list for PBXNativeTarget "currency-exchange (iOS)" */;
 			buildPhases = (
 				EC40C82B7DCE7658EA949BBA /* [CP] Check Pods Manifest.lock */,
+				6EC7147E27907BF4009ECE13 /* Confirm CurrencyLayer API key exists */,
 				6EB47759278E65B200B27ADF /* R.swift script */,
 				6EEB8435278E542C00A29884 /* Sources */,
 				6EEB8436278E542C00A29884 /* Frameworks */,
@@ -375,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EEB8462278E542C00A29884 /* Assets.xcassets in Resources */,
+				6EC7148127908616009ECE13 /* CurrencyLayerAPIKey.generated.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +464,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+		};
+		6EC7147E27907BF4009ECE13 /* Confirm CurrencyLayer API key exists */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Confirm CurrencyLayer API key exists";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nCONFIG_FILE_PATH=$SRCROOT/Generated/CurrencyLayerAPIKey.generated.plist\necho $CONFIG_FILE_PATH\nif [[ ! -f $CONFIG_FILE_PATH ]]\nthen\n\techo \"The currency layer api access key is not setup.\"\n\techo \"Run the following script from the project's root directory\"\n\techo \"./scripts/create-currencylayer-api-key-plist.sh\"\n\texit 1\nfi\n";
 		};
 		EC40C82B7DCE7658EA949BBA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

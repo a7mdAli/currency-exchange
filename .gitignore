@@ -122,4 +122,7 @@ xcuserdata/
 ### R.swift ###
 *.generated.swift
 
+### Plist ###
+*.generated.plist
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,macos,cocoapods,carthage,ruby
