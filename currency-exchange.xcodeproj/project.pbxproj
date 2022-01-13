@@ -64,6 +64,7 @@
 		5C3A4BBD460D1EFA2738788E /* Pods_currency_exchange__iOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_currency_exchange__iOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E67C28E27905E7900FD87F6 /* DateValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValue.swift; sourceTree = "<group>"; };
 		6E67C2912790621300FD87F6 /* DateValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueTests.swift; sourceTree = "<group>"; };
+		6E9A606027909B99002968B4 /* currency-exchange--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "currency-exchange--iOS--Info.plist"; sourceTree = "<group>"; };
 		6EB4775C278E675400B27ADF /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		6EC7147127906D09009ECE13 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		6EC71473279070A9009ECE13 /* APIRequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestProtocol.swift; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 		6EEB8429278E542B00A29884 = {
 			isa = PBXGroup;
 			children = (
+				6E9A606027909B99002968B4 /* currency-exchange--iOS--Info.plist */,
 				6EB4775B278E674200B27ADF /* Generated */,
 				6EEB842E278E542B00A29884 /* Shared */,
 				6EEB8440278E542C00A29884 /* macOS */,
@@ -725,6 +727,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "currency-exchange--iOS--Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -755,6 +759,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "currency-exchange--iOS--Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
