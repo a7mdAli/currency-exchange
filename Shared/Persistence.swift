@@ -13,10 +13,15 @@ struct PersistenceController {
 	static var preview: PersistenceController = {
 		let result = PersistenceController(inMemory: true)
 		let viewContext = result.container.viewContext
-		for _ in 0..<10 {
-			let newItem = Item(context: viewContext)
-			newItem.timestamp = Date()
-		}
+		let snapshot = ConversionRatesSnapshot(context: viewContext)
+		snapshot.timestamp = Date()
+		snapshot.source = "USD"
+		snapshot.quotes = [
+			"USDEGP" : 20,
+			"USDJPY" : 115,
+			"USDAED" : 10,
+			"USDKWD" : 0.3,
+		]
 		do {
 			try viewContext.save()
 		} catch {

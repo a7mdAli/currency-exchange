@@ -6,15 +6,14 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct CurrencyExchangeApp: App {
-	let persistenceController = PersistenceController.shared
-	
+	let conversionRatesStore = Store(initialState: ConversionRatesState(), reducer: conversionRatesReducer, environment: ConversionRatesEnvironment())
 	var body: some Scene {
 		WindowGroup {
-			ContentView()
-				.environment(\.managedObjectContext, persistenceController.container.viewContext)
+			ContentView(conversionRatesStore: conversionRatesStore)
 		}
 	}
 }

@@ -47,13 +47,15 @@ class ConversionRatesStoreTests: XCTestCase {
 
 	// MARK: Tests
 
-	func testConversionsRateFetch() throws {
+	func testConversionsRateFetchAndDataPersistence() throws {
 		let scheduler = DispatchQueue.test
+		let persistenceController = PersistenceController(inMemory: true)
 
 		let environment = ConversionRatesEnvironment(
 			mainQueue: scheduler.eraseToAnyScheduler(),
 			conversionRatesService: MockClient(),
-			bandwidthControl: MockBandwidthControl(scheduler: scheduler)
+			bandwidthControl: MockBandwidthControl(scheduler: scheduler),
+			persistenceController: persistenceController
 		)
 
 		let store = TestStore(
@@ -69,6 +71,13 @@ class ConversionRatesStoreTests: XCTestCase {
 		store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
 			$0.rates = Self.conversionRates
 		}
+
+		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+
+		let snapshot = try! persistenceController.container.viewContext.fetch(ConversionRatesSnapshot.fetchRequest())[0]
+		XCTAssertEqual(snapshot.timestamp, Self.conversionRates.timestamp)
+		XCTAssertEqual(snapshot.source, Self.conversionRates.source)
+		XCTAssertEqual(snapshot.quotes as? [String: Double], Self.conversionRates.quotes)
 	}
 
 	func testConversionsRateError() throws {
@@ -77,7 +86,8 @@ class ConversionRatesStoreTests: XCTestCase {
 		let environment = ConversionRatesEnvironment(
 			mainQueue: scheduler.eraseToAnyScheduler(),
 			conversionRatesService: mockClient,
-			bandwidthControl: MockBandwidthControl(scheduler: scheduler)
+			bandwidthControl: MockBandwidthControl(scheduler: scheduler),
+			persistenceController: PersistenceController(inMemory: true)
 		)
 		let store = TestStore(
 			initialState: ConversionRatesState(),
@@ -107,7 +117,8 @@ class ConversionRatesStoreTests: XCTestCase {
 		let environment = ConversionRatesEnvironment(
 			mainQueue: scheduler.eraseToAnyScheduler(),
 			conversionRatesService: MockClient(),
-			bandwidthControl: mockBandwidthControl
+			bandwidthControl: mockBandwidthControl,
+			persistenceController: PersistenceController(inMemory: true)
 		)
 
 		let store = TestStore(
@@ -127,6 +138,8 @@ class ConversionRatesStoreTests: XCTestCase {
 			$0.rates = Self.conversionRates
 		}
 
+		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+
 		// simulate bandwidth control restricting fetch
 		store.send(.fetchConversionRates)
 
@@ -143,6 +156,7 @@ class ConversionRatesStoreTests: XCTestCase {
 			$0.rates = Self.conversionRates
 		}
 
+		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 	}
 
 }
