@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import currency_exchange
 
 class DateValueTests: XCTestCase {
 
