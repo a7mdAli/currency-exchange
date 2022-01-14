@@ -21,12 +21,15 @@ enum ConversionRatesAction: Equatable {
 struct ConversionRatesEnvironment {
 	private(set) var mainQueue: AnyScheduler = DispatchQueue.main.eraseToAnyScheduler()
 	private(set) var conversionRatesService: ConversionRatesService = ConversionRatesClient()
+	private(set) var bandwidthControl: BandwidthControl = CurrencyLayerBandwidthControl(identifier: "conversion_rates")
 }
 
 let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction, ConversionRatesEnvironment>.combine(
 	Reducer { state, action, environment in
 		switch action {
 		case .fetchConversionRates:
+			guard !environment.bandwidthControl.isRestricted else { return .none }
+			environment.bandwidthControl.didUseBandwidth()
 			return environment.conversionRatesService
 				.fetchConversionRates()
 				.catchToEffect(ConversionRatesAction.conversionRatesResponse)
