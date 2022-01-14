@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIError: Error, Decodable {
+struct APIError: Equatable, Error, Decodable {
 	let code: Int
 	let info: String
 }
@@ -33,7 +33,7 @@ struct CurrencyLayerAPIResponse: Decodable {
 	}
 }
 
-struct ConversionRates: Decodable {
+struct ConversionRates: Equatable, Decodable {
 	@DateValue<UNIXTimestampCodingStrategy>
 	var timestamp: Date
 	let source: String
