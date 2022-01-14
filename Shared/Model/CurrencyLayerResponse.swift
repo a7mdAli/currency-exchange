@@ -12,7 +12,7 @@ struct APIError: Error, Decodable {
 	let info: String
 }
 
-struct APIResponse: Decodable {
+struct CurrencyLayerAPIResponse: Decodable {
 	enum APIResponseKeys: String, CodingKey {
 		case success, error, timestamp, source, quotes
 	}
