@@ -64,44 +64,48 @@ class ConversionRatesStoreTests: XCTestCase {
 			environment: environment
 		)
 
-		store.send(.fetchConversionRates)
+		XCTContext.runActivity(named: "Confirm successful API fetch request & data persistence") { _ in
+			store.send(.fetchConversionRates)
+			scheduler.advance(by: 0.3)
 
-		scheduler.advance(by: 0.3)
+			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
+				$0.rates = Self.conversionRates
+			}
 
-		store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
-			$0.rates = Self.conversionRates
+			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+			assertPersistenceController(persistenceController, contains: Self.conversionRates)
 		}
-
-		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
-
-		assertPersistenceController(persistenceController, contains: Self.conversionRates)
 	}
 
-	func testConversionsRateError() throws {
+	func testConversionsRateAPIError() throws {
+		// Prepare test data
 		let scheduler = DispatchQueue.test
 		let mockClient = MockClient()
+		mockClient.shouldReturnAnError = true
+
 		let environment = ConversionRatesEnvironment(
 			mainQueue: scheduler.eraseToAnyScheduler(),
 			conversionRatesService: mockClient,
 			bandwidthControl: MockBandwidthControl(scheduler: scheduler),
 			persistenceController: PersistenceController(inMemory: true)
 		)
+
 		let store = TestStore(
 			initialState: ConversionRatesState(),
 			reducer: conversionRatesReducer,
 			environment: environment
 		)
 
-		mockClient.shouldReturnAnError = true
+		// test
+		XCTContext.runActivity(named: "Confirm failed API request with error") { _ in
+			store.send(.fetchConversionRates)
+			scheduler.advance(by: 0.3)
 
-		store.send(.fetchConversionRates)
-
-		scheduler.advance(by: 0.3)
-
-		// expected action to be received as a result of the fetch action
-		store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
-			// expected state value as a result of handling the received action
-			$0.rates = nil
+			// expected action to be received as a result of the fetch action
+			store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
+				// expected state value as a result of handling the received action
+				$0.rates = nil
+			}
 		}
 	}
 
@@ -124,53 +128,55 @@ class ConversionRatesStoreTests: XCTestCase {
 			environment: environment
 		)
 
-		// simulate fetch
-		store.send(.fetchConversionRates)
+		// test
+		XCTContext.runActivity(named: "Confirm bandwidth restriction is applied on fetch") { _ in
+			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
+			store.send(.fetchConversionRates)
+			XCTAssertTrue(store.environment.bandwidthControl.isRestricted)
+			scheduler.advance(by: 0.3)
 
-		XCTAssertTrue(store.environment.bandwidthControl.isRestricted)
+			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
+				$0.rates = Self.conversionRates
+			}
 
-		scheduler.advance(by: 0.3)
-
-		store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
-			$0.rates = Self.conversionRates
+			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 		}
 
-		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
-
-		// simulate bandwidth control restricting fetch
-		store.send(.fetchConversionRates)
-
-		scheduler.advance(by: 1.0)
-
-		XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
-
-		// simulate fetch
-		store.send(.fetchConversionRates)
-
-		scheduler.advance(by: 0.3)
-
-		store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
-			$0.rates = Self.conversionRates
+		
+		XCTContext.runActivity(named: "Confirm unsuccessful fetch when bandwidth is restricted") { _ in
+			// since there is no effect to receive this ensures we didn't initiate a fetch request
+			// if a `conversionRatesResponse` effect is received when we're not handling it, the test will fail
+			// indicating that the bandwidth restriction didn't work as intended.
+			store.send(.fetchConversionRates)
 		}
 
-		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+		XCTContext.runActivity(named: "Confirm bandwidth restriction is lifted after the designated time interval") { _ in
+			scheduler.advance(by: 1.0)
+			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
+			// simulate fetch non-restricted fetch
+			store.send(.fetchConversionRates)
+			scheduler.advance(by: 0.3)
+
+			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
+				$0.rates = Self.conversionRates
+			}
+
+			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+		}
 	}
 
 	func testPersistenceWithNilConversionRates() {
 		// Prepare data
 		let persistedData = ConversionRates(timestamp: Date(), source: "JPY", quotes: ["JPYUSD": 0.009])
-
 		let scheduler = DispatchQueue.test
 		let mockClient = MockClient()
 		mockClient.shouldReturnAnError = true
-		let mockBandwidthControl = MockBandwidthControl(scheduler: scheduler)
-		let persistenceController = PersistenceController(inMemory: true)
 
 		let environment = ConversionRatesEnvironment(
 			mainQueue: scheduler.eraseToAnyScheduler(),
 			conversionRatesService: mockClient,
-			bandwidthControl: mockBandwidthControl,
-			persistenceController: persistenceController
+			bandwidthControl: MockBandwidthControl(scheduler: scheduler),
+			persistenceController: PersistenceController(inMemory: true)
 		)
 
 		let store = TestStore(
@@ -180,48 +186,42 @@ class ConversionRatesStoreTests: XCTestCase {
 		)
 
 		// test
+		XCTContext.runActivity(named: "Confirm persisted data is applied correctly to the store's state") { _ in
+			store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
+				$0.rates = nil
+			}
 
-		store.send(.fetchConversionRates)
+			store.send(.dataPersistenceAction(.persistData(persistedData))) {
+				$0.rates = nil
+			}
 
-		scheduler.advance(by: 0.3)
+			assertPersistenceController(store.environment.persistenceController, contains: persistedData)
 
-		store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
-			$0.rates = nil
+			store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
+				$0.rates = persistedData
+			}
 		}
 
-		// no persisted data
+		XCTContext.runActivity(named: "Confirm persisted data is not overwritten by a failed fetch request") { _ in
+			store.send(.fetchConversionRates)
 
-		store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
-			$0.rates = nil
-		}
+			scheduler.advance(by: 0.3)
 
-		// persist data
-
-		store.send(.dataPersistenceAction(.persistData(persistedData))) {
-			$0.rates = nil
-		}
-
-		assertPersistenceController(persistenceController, contains: persistedData)
-
-		store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
-			$0.rates = persistedData
+			store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
+				$0.rates = persistedData
+			}
 		}
 	}
 
-	func testPersistenceWithExistingConversionRates() throws {
+	func testFetchedDataTakesPrecedenceToPersistedData() throws {
 		// Prepare data
 		let persistedData = ConversionRates(timestamp: Date(), source: "JPY", quotes: ["JPYUSD": 0.009])
-
 		let scheduler = DispatchQueue.test
-		let mockClient = MockClient()
-		let mockBandwidthControl = MockBandwidthControl(scheduler: scheduler)
-		let persistenceController = PersistenceController(inMemory: true)
-
 		let environment = ConversionRatesEnvironment(
 			mainQueue: scheduler.eraseToAnyScheduler(),
-			conversionRatesService: mockClient,
-			bandwidthControl: mockBandwidthControl,
-			persistenceController: persistenceController
+			conversionRatesService: MockClient(),
+			bandwidthControl: MockBandwidthControl(scheduler: scheduler),
+			persistenceController: PersistenceController(inMemory: true)
 		)
 
 		let store = TestStore(
@@ -231,31 +231,32 @@ class ConversionRatesStoreTests: XCTestCase {
 		)
 
 		// test
+		XCTContext.runActivity(named: "Confirm successful fetch & data persistence") { _ in
+			store.send(.fetchConversionRates)
+			scheduler.advance(by: 0.3)
 
-		// fetch
-		store.send(.fetchConversionRates)
-		scheduler.advance(by: 0.3)
+			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
+				$0.rates = Self.conversionRates
+			}
 
-		// confirm data correctly received
-		store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
-			$0.rates = Self.conversionRates
+			scheduler.advance(by: 0.3)
+
+			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates))) {
+				$0.rates = Self.conversionRates
+			}
+
+			assertPersistenceController(store.environment.persistenceController, contains: Self.conversionRates)
 		}
-		scheduler.advance(by: 0.3)
 
-		// confirm data was persisted correctly
-		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates))) {
-			$0.rates = Self.conversionRates
-		}
-		assertPersistenceController(persistenceController, contains: Self.conversionRates)
+		XCTContext.runActivity(named: "Ensure fetched data takes precedence to persisted data") { _ in
+			store.send(.dataPersistenceAction(.persistData(persistedData)))
+			scheduler.advance(by: 0.3)
 
-		// persist different data
-		store.send(.dataPersistenceAction(.persistData(persistedData)))
-		scheduler.advance(by: 0.3)
-		assertPersistenceController(persistenceController, contains: persistedData)
+			assertPersistenceController(store.environment.persistenceController, contains: persistedData)
 
-		// confirm state doesn't change to persisted data if not nil
-		store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
-			$0.rates = Self.conversionRates
+			store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
+				$0.rates = Self.conversionRates
+			}
 		}
 	}
 
