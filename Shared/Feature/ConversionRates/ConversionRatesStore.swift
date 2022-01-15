@@ -82,6 +82,7 @@ private let persistDataReducer = Reducer<ConversionRates?, DataPersistenceAction
 			} catch let error as NSError {
 				logger.error("Retrieving user failed. \(error): \(error.userInfo)")
 			}
+
 			return .none
 		case let .persistData(rates):
 			var snapshot = ConversionRatesSnapshot(context: environment.persistenceController.container.viewContext)
@@ -90,6 +91,10 @@ private let persistDataReducer = Reducer<ConversionRates?, DataPersistenceAction
 			snapshot.quotes = rates.quotes as NSDictionary
 
 			do {
+				// remove previously persisted data
+				let deleteOldDataRequest = NSBatchDeleteRequest(fetchRequest: ConversionRatesSnapshot.fetchRequest())
+				try environment.persistenceController.container.viewContext.execute(deleteOldDataRequest)
+				// save context
 				try environment.persistenceController.container.viewContext.save()
 			} catch {
 				logger.error("Unable to save snapshot. \(error.localizedDescription)")

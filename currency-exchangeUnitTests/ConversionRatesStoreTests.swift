@@ -74,10 +74,7 @@ class ConversionRatesStoreTests: XCTestCase {
 
 		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 
-		let snapshot = try! persistenceController.container.viewContext.fetch(ConversionRatesSnapshot.fetchRequest())[0]
-		XCTAssertEqual(snapshot.timestamp, Self.conversionRates.timestamp)
-		XCTAssertEqual(snapshot.source, Self.conversionRates.source)
-		XCTAssertEqual(snapshot.quotes as? [String: Double], Self.conversionRates.quotes)
+		assertPersistenceController(persistenceController, contains: Self.conversionRates)
 	}
 
 	func testConversionsRateError() throws {
@@ -159,4 +156,115 @@ class ConversionRatesStoreTests: XCTestCase {
 		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 	}
 
+	func testPersistenceWithNilConversionRates() {
+		// Prepare data
+		let persistedData = ConversionRates(timestamp: Date(), source: "JPY", quotes: ["JPYUSD": 0.009])
+
+		let scheduler = DispatchQueue.test
+		let mockClient = MockClient()
+		mockClient.shouldReturnAnError = true
+		let mockBandwidthControl = MockBandwidthControl(scheduler: scheduler)
+		let persistenceController = PersistenceController(inMemory: true)
+
+		let environment = ConversionRatesEnvironment(
+			mainQueue: scheduler.eraseToAnyScheduler(),
+			conversionRatesService: mockClient,
+			bandwidthControl: mockBandwidthControl,
+			persistenceController: persistenceController
+		)
+
+		let store = TestStore(
+			initialState: ConversionRatesState(),
+			reducer: conversionRatesReducer,
+			environment: environment
+		)
+
+		// test
+
+		store.send(.fetchConversionRates)
+
+		scheduler.advance(by: 0.3)
+
+		store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
+			$0.rates = nil
+		}
+
+		// no persisted data
+
+		store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
+			$0.rates = nil
+		}
+
+		// persist data
+
+		store.send(.dataPersistenceAction(.persistData(persistedData))) {
+			$0.rates = nil
+		}
+
+		assertPersistenceController(persistenceController, contains: persistedData)
+
+		store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
+			$0.rates = persistedData
+		}
+	}
+
+	func testPersistenceWithExistingConversionRates() throws {
+		// Prepare data
+		let persistedData = ConversionRates(timestamp: Date(), source: "JPY", quotes: ["JPYUSD": 0.009])
+
+		let scheduler = DispatchQueue.test
+		let mockClient = MockClient()
+		let mockBandwidthControl = MockBandwidthControl(scheduler: scheduler)
+		let persistenceController = PersistenceController(inMemory: true)
+
+		let environment = ConversionRatesEnvironment(
+			mainQueue: scheduler.eraseToAnyScheduler(),
+			conversionRatesService: mockClient,
+			bandwidthControl: mockBandwidthControl,
+			persistenceController: persistenceController
+		)
+
+		let store = TestStore(
+			initialState: ConversionRatesState(),
+			reducer: conversionRatesReducer,
+			environment: environment
+		)
+
+		// test
+
+		// fetch
+		store.send(.fetchConversionRates)
+		scheduler.advance(by: 0.3)
+
+		// confirm data correctly received
+		store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
+			$0.rates = Self.conversionRates
+		}
+		scheduler.advance(by: 0.3)
+
+		// confirm data was persisted correctly
+		store.receive(.dataPersistenceAction(.persistData(Self.conversionRates))) {
+			$0.rates = Self.conversionRates
+		}
+		assertPersistenceController(persistenceController, contains: Self.conversionRates)
+
+		// persist different data
+		store.send(.dataPersistenceAction(.persistData(persistedData)))
+		scheduler.advance(by: 0.3)
+		assertPersistenceController(persistenceController, contains: persistedData)
+
+		// confirm state doesn't change to persisted data if not nil
+		store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
+			$0.rates = Self.conversionRates
+		}
+	}
+
+	// MARK: Helper methods
+
+	func assertPersistenceController(_ persistenceController: PersistenceController, contains data: ConversionRates) {
+		let snapshot = try! persistenceController.container.viewContext.fetch(ConversionRatesSnapshot.fetchRequest())[0]
+		XCTAssertEqual(snapshot.timestamp, data.timestamp)
+		XCTAssertEqual(snapshot.source, data.source)
+		XCTAssertEqual(snapshot.quotes as? [String: Double], data.quotes)
+	}
 }
