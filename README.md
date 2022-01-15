@@ -1,3 +1,14 @@
+# Tabs vs Spaces
+We're using Tabs instead of spaces in this repository.
+It's better for accessibility & easier to adjust for each user's preference.
+
+* To change your GitHub tab-size rendering preference, follow the instructions [here](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings/managing-your-tab-size-rendering-preference).
+
+* To edit your tab-size rendering preference in Xcode follow these instructions:
+    1. Open preferences and navigate to Indentation.
+Xcode > Preference > Text Editing > Indentation
+    2. Change Tab Width to your liking.
+
 # Environment Setup
 
 ## Homebrew
