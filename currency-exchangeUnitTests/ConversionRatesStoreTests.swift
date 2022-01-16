@@ -110,6 +110,7 @@ class ConversionRatesStoreTests: XCTestCase {
 			store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
 				// expected state value as a result of handling the received action
 				$0.rates = nil
+				$0.alert = AlertState(title: .init("(╯°□°）╯︵ ┻━┻"), message: TextState("\(Self.apiError.info)"), dismissButton: .default(TextState("OK"), action: .send(.dismissAlert)))
 			}
 		}
 	}
@@ -227,6 +228,7 @@ class ConversionRatesStoreTests: XCTestCase {
 
 			store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
 				$0.rates = persistedData
+				$0.alert = AlertState(title: .init("(╯°□°）╯︵ ┻━┻"), message: TextState("\(Self.apiError.info)"), dismissButton: .default(TextState("OK"), action: .send(.dismissAlert)))
 			}
 		}
 	}

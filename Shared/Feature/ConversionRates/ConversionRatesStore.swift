@@ -15,11 +15,13 @@ private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: 
 struct ConversionRatesState: Equatable {
 	var rates: ConversionRates?
 	var convertRateState: ConvertRateState = .init()
+	var alert: AlertState<ConversionRatesAction>?
 }
 
 enum ConversionRatesAction: Equatable {
 	case fetchConversionRates
 	case conversionRatesResponse(Result<ConversionRates, APIError>)
+	case dismissAlert
 	case dataPersistenceAction(DataPersistenceAction)
 	case convertRateAction(ConvertRateAction)
 }
@@ -62,8 +64,15 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 				Effect(value: .dataPersistenceAction(.persistData(conversionRates)))
 			)
 		case let .conversionRatesResponse(.failure(error)):
-			// TODO: Handle Errors
 			logger.error("Failed to fetch conversionRates (error: \(error))")
+			state.alert = AlertState(
+				title: .init("(╯°□°）╯︵ ┻━┻"),
+				message: TextState("\(error.info)"),
+				dismissButton: .default(TextState("OK"), action: .send(.dismissAlert))
+			)
+			return .none
+		case .dismissAlert:
+			state.alert = nil
 			return .none
 		case .dataPersistenceAction(.setFromPersistedDataIfNil):
 			guard let rates = state.rates else {
