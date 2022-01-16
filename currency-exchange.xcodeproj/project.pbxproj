@@ -110,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				6E094B8B2791AE9C001867D7 /* ConversionRates */,
+				6E45FF0F2793D9A200022E5E /* ConvertRate */,
 			);
 			path = Feature;
 			sourceTree = "<group>";
@@ -118,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				6E094B8C2791AEB5001867D7 /* ConversionRatesStore.swift */,
-				6E45FF0B27929F4900022E5E /* ConvertRateStore.swift */,
 				6E094B8E2791B0BF001867D7 /* ConversionRatesService.swift */,
 				6E094BA72791EC89001867D7 /* BandwidthControl.swift */,
 			);
@@ -134,6 +134,14 @@
 				6E45FF0D2793BAE000022E5E /* ConvertRateStoreTests.swift */,
 			);
 			path = "currency-exchangeUnitTests";
+			sourceTree = "<group>";
+		};
+		6E45FF0F2793D9A200022E5E /* ConvertRate */ = {
+			isa = PBXGroup;
+			children = (
+				6E45FF0B27929F4900022E5E /* ConvertRateStore.swift */,
+			);
+			path = ConvertRate;
 			sourceTree = "<group>";
 		};
 		6E67C28927905DF100FD87F6 /* Model */ = {
