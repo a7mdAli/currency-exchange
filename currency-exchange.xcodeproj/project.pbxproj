@@ -82,7 +82,7 @@
 		6EEB8432278E542B00A29884 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		6EEB8433278E542B00A29884 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		6EEB8434278E542C00A29884 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		6EEB8439278E542C00A29884 /* currency-exchange.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "currency-exchange.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EEB8439278E542C00A29884 /* Exchange.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Exchange.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81885679F34C1808995F2450 /* Pods-currency-exchange-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-currency-exchange-iOS.release.xcconfig"; path = "Target Support Files/Pods-currency-exchange-iOS/Pods-currency-exchange-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		820FCC071A55E6129BE70D21 /* Pods-currency-exchange (iOS).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-currency-exchange (iOS).debug.xcconfig"; path = "Target Support Files/Pods-currency-exchange (iOS)/Pods-currency-exchange (iOS).debug.xcconfig"; sourceTree = "<group>"; };
 		BF941AD1C58F02F585F9E594 /* Pods-currency-exchange (macOS).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-currency-exchange (macOS).release.xcconfig"; path = "Target Support Files/Pods-currency-exchange (macOS)/Pods-currency-exchange (macOS).release.xcconfig"; sourceTree = "<group>"; };
@@ -255,7 +255,7 @@
 		6EEB843A278E542C00A29884 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6EEB8439278E542C00A29884 /* currency-exchange.app */,
+				6EEB8439278E542C00A29884 /* Exchange.app */,
 				6E094B982791C74D001867D7 /* currency-exchangeUnitTests.xctest */,
 			);
 			name = Products;
@@ -316,7 +316,7 @@
 				6EB47757278E63FC00B27ADF /* ComposableArchitecture */,
 			);
 			productName = "currency-exchange (iOS)";
-			productReference = 6EEB8439278E542C00A29884 /* currency-exchange.app */;
+			productReference = 6EEB8439278E542C00A29884 /* Exchange.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -700,7 +700,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ahmedbasha.currency-exchange";
-				PRODUCT_NAME = "currency-exchange";
+				PRODUCT_NAME = Exchange;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -732,7 +732,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ahmedbasha.currency-exchange";
-				PRODUCT_NAME = "currency-exchange";
+				PRODUCT_NAME = Exchange;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
