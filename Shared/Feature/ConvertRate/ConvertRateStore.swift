@@ -17,6 +17,7 @@ struct Rate: Equatable, Identifiable {
 struct ConvertRateState: Equatable {
 	var amountToConvert: Double = 0
 	var rates: [Rate] = []
+	var inputErrorMessage: String = ""
 
 	var source: Rate? { rates.first }
 	var ratesToConvert: [Rate] { Array(rates.dropFirst()) }
@@ -92,12 +93,13 @@ let convertRateReducer = Reducer<ConvertRateState, ConvertRateAction, ConvertRat
 			return .none
 
 		case let .setAmount(amount):
+			state.inputErrorMessage = ""
 			if amount.isEmpty {
 				state.amountToConvert = 0
 			} else if let doubleValue = Double(amount) {
 				state.amountToConvert = doubleValue
 			} else {
-				// TODO: show error message
+				state.inputErrorMessage = R.string.localizable.invalidInputErrorMessage()
 			}
 			return .none
 

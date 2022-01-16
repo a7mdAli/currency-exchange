@@ -27,8 +27,16 @@ struct CurrencyExchangeListView: View {
 		WithViewStore(convertRateStore) { convertRateViewStore in
 			ZStack {
 				VStack(alignment: .leading, spacing: 0) {
-					inputTextField(convertRateViewStore)
-						.padding()
+					VStack {
+						inputTextField(convertRateViewStore)
+						if !convertRateViewStore.inputErrorMessage.isEmpty {
+							Text(convertRateViewStore.inputErrorMessage)
+								.font(.caption)
+								.frame(maxWidth: .infinity, alignment: .leading)
+								.foregroundColor(.red)
+						}
+					}
+					.padding()
 					Divider()
 					exchangeRateListView(convertRateViewStore)
 				}
@@ -38,6 +46,7 @@ struct CurrencyExchangeListView: View {
 				searchView(convertRateViewStore)
 					.opacity(focusedField == .search ? 1 : 0)
 			}
+			.animation(.default, value: convertRateViewStore.inputErrorMessage)
 			.animation(.default, value: focusedField)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {

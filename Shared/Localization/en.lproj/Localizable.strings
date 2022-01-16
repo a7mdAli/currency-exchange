@@ -26,6 +26,7 @@
 // MARK: CurrencyExchangeView
 //
 "copyExchangeAmount" = "Copy Exchange Amount";
+"invalidInputErrorMessage" = "The input is invalid. Make sure to use Arabic numerals.";
 
 //
 // MARK: Common

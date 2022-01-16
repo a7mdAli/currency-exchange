@@ -26,6 +26,7 @@
 // MARK: CurrencyExchangeView
 //
 "copyConvertedAmount" = "為替額をコピー";
+"invalidInputErrorMessage" = "アラビア数字を使用していることをご確認の上、入力を修正してください。";
 
 //
 // MARK: Common
