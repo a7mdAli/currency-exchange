@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import currency_exchange
+@testable import Exchange
 
 class CurrencyLayerBandwidthControlTests: XCTestCase {
 

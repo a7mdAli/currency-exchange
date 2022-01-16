@@ -7,7 +7,7 @@
 
 import XCTest
 import ComposableArchitecture
-@testable import currency_exchange
+@testable import Exchange
 
 class ConvertRateStoreTests: XCTestCase {
 	private static let conversionRates = ConversionRates(timestamp: Date(), source: "USD", quotes: ["USDJPY": 115.7, "USDEGP": 16, "KWD": 0.3])

@@ -8,7 +8,7 @@
 import XCTest
 import Combine
 import ComposableArchitecture
-@testable import currency_exchange
+@testable import Exchange
 
 class ConversionRatesStoreTests: XCTestCase {
 	private static let apiError = APIError(code: 101, info: "User did not supply an access key or supplied an invalid access key.")
