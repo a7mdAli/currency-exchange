@@ -12,7 +12,7 @@ final class APIClient {
 	private let session: URLSession
 	private let cancelables: Set<AnyCancellable> = []
 
-	init(session: URLSession = .shared) {
+	init(session: URLSession = .noCachingSession) {
 		self.session = session
 	}
 
@@ -24,5 +24,15 @@ final class APIClient {
 			})
 			.decode(type: ResponseType.self, decoder: JSONDecoder())
 			.eraseToAnyPublisher()
+	}
+}
+
+extension URLSession {
+	static var noCachingSession: URLSession {
+		let config = URLSessionConfiguration.default
+		config.requestCachePolicy = .reloadIgnoringLocalCacheData
+		config.urlCache = nil
+
+		return URLSession(configuration: config)
 	}
 }
