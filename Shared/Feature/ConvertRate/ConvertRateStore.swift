@@ -73,7 +73,7 @@ let convertRateReducer = Reducer<ConvertRateState, ConvertRateAction, ConvertRat
 					}
 
 					return Rate(
-						// remove source string
+						// remove source string (USDJPY -> JPY)
 						currency: String(currency[currency.index(currency.startIndex, offsetBy: rates.source.count)...]),
 						rate: rate
 					)
