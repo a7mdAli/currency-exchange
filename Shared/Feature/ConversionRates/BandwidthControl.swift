@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import OSLog
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CurrencyLayerBandwidthControl")
 
 protocol BandwidthControl {
 	var timeIntervalToRestrainInSeconds: TimeInterval { get }
@@ -36,5 +39,6 @@ final class CurrencyLayerBandwidthControl: BandwidthControl {
 		// TODO: Consider something other than UserDefaults. As UserDefaults are relatively easy to modify.
 		let dateToLiftRestriction = Date().addingTimeInterval(timeIntervalToRestrainInSeconds)
 		UserDefaults.standard.set(dateToLiftRestriction, forKey: key)
+		logger.info("\(self.key) did use bandwidth. Will lift restriction on \(dateToLiftRestriction)")
 	}
 }
