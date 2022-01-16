@@ -12,3 +12,12 @@
 
 "alertTitle" = "(╯°□°）╯︵ ┻━┻";
 "alertOKButtonTitle" = "What!!";
+
+//
+// MARK: RootView
+//
+
+"rootViewNavigationTitle" = "Currency Exchange Rates";
+"loadingConversionRates" = "Loading...";
+"rootViewErrorTitle" = "Something seems to have gone wrong!";
+"rootViewErrorMessage" = "Try again by tapping on the refresh button above.";

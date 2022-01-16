@@ -12,3 +12,12 @@
 
 "alertTitle" = "(╯°□°）╯︵ ┻━┻";
 "alertOKButtonTitle" = "何！！";
+
+//
+// MARK: RootView
+//
+
+"rootViewNavigationTitle" = "為替レート";
+"loadingConversionRates" = "ローディング中...";
+"rootViewErrorTitle" = "何かしらのエラーが発生しています!";
+"rootViewErrorMessage" = "上記のリフレッシュボタンをタップし、再度お試しください。";
