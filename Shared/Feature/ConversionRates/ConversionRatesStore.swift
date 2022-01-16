@@ -14,12 +14,14 @@ private let logger = Logger(subsystem: "conversion_rates_store", category: "Stor
 
 struct ConversionRatesState: Equatable {
 	var rates: ConversionRates?
+	var convertRateState: ConvertRateState = .init()
 }
 
 enum ConversionRatesAction: Equatable {
 	case fetchConversionRates
 	case conversionRatesResponse(Result<ConversionRates, APIError>)
 	case dataPersistenceAction(DataPersistenceAction)
+	case convertRateAction(ConvertRateAction)
 }
 
 struct ConversionRatesEnvironment {
@@ -30,6 +32,11 @@ struct ConversionRatesEnvironment {
 }
 
 let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction, ConversionRatesEnvironment>.combine(
+	convertRateReducer.pullback(
+		state: \.convertRateState,
+		action: /ConversionRatesAction.convertRateAction,
+		environment: { _ in ConvertRateEnvironment() }
+	),
 	persistDataReducer.pullback(
 		state: \.rates,
 		action: /ConversionRatesAction.dataPersistenceAction,
@@ -47,11 +54,21 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 				.eraseToEffect()
 		case let .conversionRatesResponse(.success(conversionRates)):
 			state.rates = conversionRates
-			return Effect(value: .dataPersistenceAction(.persistData(conversionRates)))
+			return Effect.concatenate(
+				Effect(value: .convertRateAction(.updateWithConversionRates(conversionRates))),
+				Effect(value: .dataPersistenceAction(.persistData(conversionRates)))
+			)
 		case let .conversionRatesResponse(.failure(error)):
 			// TODO: Handle Errors
 			return .none
+		case .dataPersistenceAction(.setFromPersistedDataIfNil):
+			guard let rates = state.rates else {
+				return .none
+			}
+			return Effect(value: .convertRateAction(.updateWithConversionRates(rates)))
 		case .dataPersistenceAction(_):
+			return .none
+		case .convertRateAction(_):
 			return .none
 		}
 	}

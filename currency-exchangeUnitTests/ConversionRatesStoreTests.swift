@@ -13,6 +13,7 @@ import ComposableArchitecture
 class ConversionRatesStoreTests: XCTestCase {
 	private static let apiError = APIError(code: 101, info: "User did not supply an access key or supplied an invalid access key.")
 	private static let conversionRates = ConversionRates(timestamp: Date(), source: "USD", quotes: ["JPY": 115.7])
+	private static let expectedRates = [Rate(currency: "USD", rate: 1.0), Rate(currency: "JPY", rate: 115.7)]
 
 	// MARK: MockClient
 
@@ -70,6 +71,10 @@ class ConversionRatesStoreTests: XCTestCase {
 
 			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
 				$0.rates = Self.conversionRates
+			}
+
+			store.receive(.convertRateAction(.updateWithConversionRates(Self.conversionRates))) {
+				$0.convertRateState.rates = Self.expectedRates
 			}
 
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
@@ -139,6 +144,10 @@ class ConversionRatesStoreTests: XCTestCase {
 				$0.rates = Self.conversionRates
 			}
 
+			store.receive(.convertRateAction(.updateWithConversionRates(Self.conversionRates))) {
+				$0.convertRateState.rates = Self.expectedRates
+			}
+
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 		}
 
@@ -161,6 +170,10 @@ class ConversionRatesStoreTests: XCTestCase {
 				$0.rates = Self.conversionRates
 			}
 
+			store.receive(.convertRateAction(.updateWithConversionRates(Self.conversionRates))) {
+				$0.convertRateState.rates = Self.expectedRates
+			}
+
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 		}
 	}
@@ -168,6 +181,7 @@ class ConversionRatesStoreTests: XCTestCase {
 	func testPersistenceWithNilConversionRates() {
 		// Prepare data
 		let persistedData = ConversionRates(timestamp: Date(), source: "JPY", quotes: ["JPYUSD": 0.009])
+		let expectedRates = [Rate(currency: "JPY", rate: 1.0), Rate(currency: "USD", rate: 0.009)]
 		let scheduler = DispatchQueue.test
 		let mockClient = MockClient()
 		mockClient.shouldReturnAnError = true
@@ -199,6 +213,10 @@ class ConversionRatesStoreTests: XCTestCase {
 
 			store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
 				$0.rates = persistedData
+			}
+
+			store.receive(.convertRateAction(.updateWithConversionRates(persistedData))) {
+				$0.convertRateState.rates = expectedRates
 			}
 		}
 
@@ -241,6 +259,10 @@ class ConversionRatesStoreTests: XCTestCase {
 
 			scheduler.advance(by: 0.3)
 
+			store.receive(.convertRateAction(.updateWithConversionRates(Self.conversionRates))) {
+				$0.convertRateState.rates = Self.expectedRates
+			}
+
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates))) {
 				$0.rates = Self.conversionRates
 			}
@@ -256,6 +278,10 @@ class ConversionRatesStoreTests: XCTestCase {
 
 			store.send(.dataPersistenceAction(.setFromPersistedDataIfNil)) {
 				$0.rates = Self.conversionRates
+			}
+
+			store.receive(.convertRateAction(.updateWithConversionRates(Self.conversionRates))) {
+				$0.convertRateState.rates = Self.expectedRates
 			}
 		}
 	}
