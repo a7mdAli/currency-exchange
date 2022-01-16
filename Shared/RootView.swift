@@ -17,7 +17,10 @@ struct RootView: View {
 			WithViewStore(conversionRatesStore) { conversionRatesViewStore in
 				Group {
 					if conversionRatesViewStore.rates != nil {
-						Text("ConvertRateView")
+						CurrencyExchangeListView(convertRateStore: conversionRatesStore.convertRateStore)
+							.refreshable {
+								conversionRatesViewStore.send(.fetchConversionRates)
+							}
 							.overlay {
 								if conversionRatesViewStore.isFetching {
 									ProgressView(R.string.localizable.loadingConversionRates())
@@ -35,6 +38,14 @@ struct RootView: View {
 								.font(.headline)
 							Text(R.string.localizable.rootViewErrorMessage())
 								.font(.caption)
+
+							Button {
+								conversionRatesViewStore.send(.fetchConversionRates)
+							} label: {
+								Image(systemName: "arrow.clockwise")
+									.frame(minWidth: 44, minHeight: 44)
+									.contentShape(Rectangle())
+							}
 						}
 						.multilineTextAlignment(.center)
 						.padding(.horizontal, 24)
@@ -45,17 +56,6 @@ struct RootView: View {
 					conversionRatesViewStore.send(.dataPersistenceAction(.setFromPersistedDataIfNil))
 					// initiate a fetch request
 					conversionRatesViewStore.send(.fetchConversionRates)
-				}
-				.toolbar {
-					ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
-						Button {
-							conversionRatesViewStore.send(.fetchConversionRates)
-						} label: {
-							Image(systemName: "arrow.clockwise")
-								.frame(minWidth: 44, minHeight: 44)
-								.contentShape(Rectangle())
-						}
-					}
 				}
 				.alert(conversionRatesStore.scope(state: \.alert), dismiss: ConversionRatesAction.dismissAlert)
 			}

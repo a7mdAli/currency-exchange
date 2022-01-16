@@ -20,4 +20,11 @@
 "rootViewNavigationTitle" = "為替レート";
 "loadingConversionRates" = "ローディング中...";
 "rootViewErrorTitle" = "何かしらのエラーが発生しています!";
-"rootViewErrorMessage" = "上記のリフレッシュボタンをタップし、再度お試しください。";
+"rootViewErrorMessage" = "下記のリフレッシュボタンをタップし、再度お試しください。";
+
+//
+// MARK: Common
+//
+
+"cancel" = "キャンセル";
+"notApplicable" = "該当なし";

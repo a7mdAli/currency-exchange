@@ -20,4 +20,11 @@
 "rootViewNavigationTitle" = "Currency Exchange Rates";
 "loadingConversionRates" = "Loading...";
 "rootViewErrorTitle" = "Something seems to have gone wrong!";
-"rootViewErrorMessage" = "Try again by tapping on the refresh button above.";
+"rootViewErrorMessage" = "Try again by tapping on the refresh button bellow.";
+
+//
+// MARK: Common
+//
+
+"cancel" = "Cancel";
+"notApplicable" = "N/A";
