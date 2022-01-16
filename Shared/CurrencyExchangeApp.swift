@@ -13,7 +13,7 @@ struct CurrencyExchangeApp: App {
 	let conversionRatesStore = Store(initialState: ConversionRatesState(), reducer: conversionRatesReducer, environment: ConversionRatesEnvironment())
 	var body: some Scene {
 		WindowGroup {
-			ContentView(conversionRatesStore: conversionRatesStore)
+			RootView(conversionRatesStore: conversionRatesStore)
 		}
 	}
 }

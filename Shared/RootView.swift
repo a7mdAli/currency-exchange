@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  RootView.swift
 //  Shared
 //
 //  Created by Ahmed Basha on 2022/01/12.
@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct ContentView: View {
+struct RootView: View {
 
 	let conversionRatesStore: Store<ConversionRatesState, ConversionRatesAction>
 
@@ -17,9 +17,9 @@ struct ContentView: View {
 	}
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct RootView_Previews: PreviewProvider {
 	static var previews: some View {
-		ContentView(
+		RootView(
 			conversionRatesStore: Store(
 				initialState: ConversionRatesState(),
 				reducer: conversionRatesReducer,
