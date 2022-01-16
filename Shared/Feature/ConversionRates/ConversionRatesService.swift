@@ -33,7 +33,8 @@ final class ConversionRatesClient: ConversionRatesService {
 				if let error = error as? APIError {
 					return error
 				} else {
-					return APIError(code: -1, info: error.localizedDescription)
+					let error = error as NSError
+					return APIError(code: error.code, info: error.localizedDescription)
 				}
 			}
 			.eraseToAnyPublisher()

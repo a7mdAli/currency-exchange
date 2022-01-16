@@ -19,10 +19,11 @@ class ConversionRatesStoreTests: XCTestCase {
 
 	private final class MockClient: ConversionRatesService {
 		var shouldReturnAnError: Bool = false
+		var errorToThrow: APIError = apiError
 
 		func fetchConversionRates() -> AnyPublisher<ConversionRates, APIError> {
 			Result<ConversionRates, APIError>
-				.Publisher(shouldReturnAnError ? .failure(apiError) : .success(conversionRates))
+				.Publisher(shouldReturnAnError ? .failure(errorToThrow) : .success(conversionRates))
 				.eraseToAnyPublisher()
 		}
 	}
@@ -151,17 +152,19 @@ class ConversionRatesStoreTests: XCTestCase {
 		)
 
 		// test
-		XCTContext.runActivity(named: "Confirm bandwidth restriction is applied on fetch") { _ in
+		XCTContext.runActivity(named: "Confirm bandwidth restriction is applied on successful fetch") { _ in
 			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
 			store.send(.fetchConversionRates) {
 				$0.isFetching = true
 			}
-			XCTAssertTrue(store.environment.bandwidthControl.isRestricted)
+
 			scheduler.advance(by: 0.3)
 
 			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
 				$0.rates = Self.conversionRates
 			}
+
+			XCTAssertTrue(store.environment.bandwidthControl.isRestricted)
 
 			store.receive(.convertRateAction(.updateWithConversionRates(Self.conversionRates))) {
 				$0.convertRateState.rates = Self.expectedRates
@@ -184,7 +187,7 @@ class ConversionRatesStoreTests: XCTestCase {
 		XCTContext.runActivity(named: "Confirm bandwidth restriction is lifted after the designated time interval") { _ in
 			scheduler.advance(by: 1.0)
 			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
-			// simulate fetch non-restricted fetch
+
 			store.send(.fetchConversionRates) {
 				$0.isFetching = true
 			}
@@ -199,10 +202,63 @@ class ConversionRatesStoreTests: XCTestCase {
 			}
 
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
-			
+
 			store.receive(.set(\.$isFetching, false)) {
 				$0.isFetching = false
 			}
+		}
+	}
+
+	func testBandwidthControlInCaseOfErrors() {
+		// Prepare data
+		let noInternetConnectionError = APIError(code: 1009, info: "The Internet connection appears to be offline")
+		let scheduler = DispatchQueue.test
+		let mockClient = MockClient()
+		mockClient.shouldReturnAnError = true
+		let mockBandwidthControl = MockBandwidthControl(scheduler: scheduler)
+		mockBandwidthControl.timeIntervalToRestrainInSeconds = 1.0
+
+		let environment = ConversionRatesEnvironment(
+			mainQueue: scheduler.eraseToAnyScheduler(),
+			conversionRatesService: mockClient,
+			bandwidthControl: mockBandwidthControl,
+			persistenceController: PersistenceController(inMemory: true)
+		)
+
+		let store = TestStore(
+			initialState: ConversionRatesState(),
+			reducer: conversionRatesReducer,
+			environment: environment
+		)
+
+		XCTContext.runActivity(named: "Confirm bandwidth restriction is not enforced on non API errors") { _ in
+			mockClient.errorToThrow = noInternetConnectionError
+			store.send(.fetchConversionRates) { $0.isFetching = true }
+			scheduler.advance(by: 0.3)
+			store.receive(.conversionRatesResponse(.failure(noInternetConnectionError))) {
+				$0.alert = AlertState(
+					title: TextState(R.string.localizable.alertTitle()),
+					message: TextState(noInternetConnectionError.info),
+					dismissButton: .default(TextState(R.string.localizable.alertOKButtonTitle()), action: .send(.dismissAlert))
+				)
+			}
+			store.receive(.binding(.set(\.$isFetching, false))) { $0.isFetching = false }
+			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
+		}
+
+		XCTContext.runActivity(named: "Confirm bandwidth restriction is enforced on API errors") { _ in
+			mockClient.errorToThrow = Self.apiError
+			store.send(.fetchConversionRates) { $0.isFetching = true }
+			scheduler.advance(by: 0.3)
+			store.receive(.conversionRatesResponse(.failure(Self.apiError))) {
+				$0.alert = AlertState(
+					title: TextState(R.string.localizable.alertTitle()),
+					message: TextState(Self.apiError.info),
+					dismissButton: .default(TextState(R.string.localizable.alertOKButtonTitle()), action: .send(.dismissAlert))
+				)
+			}
+			store.receive(.binding(.set(\.$isFetching, false))) { $0.isFetching = false }
+			XCTAssertTrue(store.environment.bandwidthControl.isRestricted)
 		}
 	}
 

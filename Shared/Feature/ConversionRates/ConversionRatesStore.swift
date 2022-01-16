@@ -54,7 +54,6 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 				return .none
 			}
 			state.isFetching = true
-			environment.bandwidthControl.didUseBandwidth()
 			return environment.conversionRatesService
 				.fetchConversionRates()
 				.catchToEffect(ConversionRatesAction.conversionRatesResponse)
@@ -62,12 +61,17 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 				.receive(on: environment.mainQueue)
 				.eraseToEffect()
 		case let .conversionRatesResponse(.success(conversionRates)):
+			environment.bandwidthControl.didUseBandwidth()
 			state.rates = conversionRates
 			return Effect.concatenate(
 				Effect(value: .convertRateAction(.updateWithConversionRates(conversionRates))),
 				Effect(value: .dataPersistenceAction(.persistData(conversionRates)))
 			)
 		case let .conversionRatesResponse(.failure(error)):
+			let isCurrencyLayerError = 101..<600 ~= error.code
+			if isCurrencyLayerError {
+				environment.bandwidthControl.didUseBandwidth()
+			}
 			logger.error("Failed to fetch conversionRates (error: \(error))")
 			state.alert = AlertState(
 				title: .init(R.string.localizable.alertTitle()),
