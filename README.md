@@ -58,6 +58,15 @@ After you've received your API access key, run the next command from the termina
 # paste the API access key you've received upon registration with currencylayer.
 ```
 
+> 📝 **Note**
+>
+> Make sure to set the development team in the project settings if you plan on running the app on an actual device.
+
 # Acknowledgements
 * Using the flag assets found [here](https://github.com/transferwise/currency-flags) to make the currencies a bit more glanceable.
 * The app icon is from [icons8.com](https://icons8.com/icons/set/currency-exchange).
+
+# A Preview of the App
+https://user-images.githubusercontent.com/6136903/149676731-557e90d4-d63c-404a-82c3-aa92a9e94ad2.mov
+
+
