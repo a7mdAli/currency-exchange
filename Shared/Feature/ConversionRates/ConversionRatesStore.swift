@@ -66,9 +66,9 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 		case let .conversionRatesResponse(.failure(error)):
 			logger.error("Failed to fetch conversionRates (error: \(error))")
 			state.alert = AlertState(
-				title: .init("(╯°□°）╯︵ ┻━┻"),
+				title: .init(R.string.localizable.alertTitle()),
 				message: TextState("\(error.info)"),
-				dismissButton: .default(TextState("OK"), action: .send(.dismissAlert))
+				dismissButton: .default(TextState(R.string.localizable.alertOKButtonTitle()), action: .send(.dismissAlert))
 			)
 			return .none
 		case .dismissAlert:

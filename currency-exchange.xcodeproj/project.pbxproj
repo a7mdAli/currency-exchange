@@ -17,6 +17,7 @@
 		6E4341A927909603001D5BC9 /* CurrencyLayerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4341A827909603001D5BC9 /* CurrencyLayerResponse.swift */; };
 		6E45FF0C27929F4900022E5E /* ConvertRateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E45FF0B27929F4900022E5E /* ConvertRateStore.swift */; };
 		6E45FF0E2793BAE000022E5E /* ConvertRateStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E45FF0D2793BAE000022E5E /* ConvertRateStoreTests.swift */; };
+		6E45FF132793E80500022E5E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E45FF152793E80500022E5E /* Localizable.strings */; };
 		6E67C28F27905E7900FD87F6 /* DateValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E67C28E27905E7900FD87F6 /* DateValue.swift */; };
 		6EB47758278E63FC00B27ADF /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 6EB47757278E63FC00B27ADF /* ComposableArchitecture */; };
 		6EB4775D278E675400B27ADF /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB4775C278E675400B27ADF /* R.generated.swift */; };
@@ -56,6 +57,8 @@
 		6E4341A827909603001D5BC9 /* CurrencyLayerResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyLayerResponse.swift; sourceTree = "<group>"; };
 		6E45FF0B27929F4900022E5E /* ConvertRateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertRateStore.swift; sourceTree = "<group>"; };
 		6E45FF0D2793BAE000022E5E /* ConvertRateStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertRateStoreTests.swift; sourceTree = "<group>"; };
+		6E45FF162793E80E00022E5E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6E45FF172793E81D00022E5E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6E67C28E27905E7900FD87F6 /* DateValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValue.swift; sourceTree = "<group>"; };
 		6E9A606027909B99002968B4 /* currency-exchange--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "currency-exchange--iOS--Info.plist"; sourceTree = "<group>"; };
 		6EB4775C278E675400B27ADF /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
@@ -144,6 +147,14 @@
 			path = ConvertRate;
 			sourceTree = "<group>";
 		};
+		6E45FF102793E65200022E5E /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				6E45FF152793E80500022E5E /* Localizable.strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
 		6E67C28927905DF100FD87F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +210,7 @@
 				6EEB8431278E542B00A29884 /* CurrencyExchangeApp.swift */,
 				6EEB8432278E542B00A29884 /* RootView.swift */,
 				6EEB8433278E542B00A29884 /* Persistence.swift */,
+				6E45FF102793E65200022E5E /* Localization */,
 				6E094B8A2791AE93001867D7 /* Feature */,
 				6EC7147027906CFA009ECE13 /* NetworkLayer */,
 				6E67C28D27905E6800FD87F6 /* PropertyWrappers */,
@@ -302,6 +314,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 6EEB8429278E542B00A29884;
 			packageReferences = (
@@ -330,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EEB8462278E542C00A29884 /* Assets.xcassets in Resources */,
+				6E45FF132793E80500022E5E /* Localizable.strings in Resources */,
 				6EC7148127908616009ECE13 /* CurrencyLayerAPIKey.generated.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,6 +474,18 @@
 			targetProxy = 6E094B9C2791C74D001867D7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6E45FF152793E80500022E5E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6E45FF162793E80E00022E5E /* en */,
+				6E45FF172793E81D00022E5E /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		6E094B9F2791C74D001867D7 /* Debug */ = {

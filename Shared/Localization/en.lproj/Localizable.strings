@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  currency-exchange
+
+  Created by Ahmed Basha on 2022/01/16.
+  
+*/
+
+//
+// MARK: ConversionRatesStore
+//
+
+"alertTitle" = "(╯°□°）╯︵ ┻━┻";
+"alertOKButtonTitle" = "What!!";
