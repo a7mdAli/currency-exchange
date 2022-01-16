@@ -10,7 +10,7 @@ import ComposableArchitecture
 import CoreData
 import OSLog
 
-private let logger = Logger(subsystem: "conversion_rates_store", category: "Store")
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "ConversionRatesReducer")
 
 struct ConversionRatesState: Equatable {
 	var rates: ConversionRates?
@@ -45,7 +45,10 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 	Reducer { state, action, environment in
 		switch action {
 		case .fetchConversionRates:
-			guard !environment.bandwidthControl.isRestricted else { return .none }
+			guard !environment.bandwidthControl.isRestricted else {
+				logger.debug("Bandwidth is restricted!")
+				return .none
+			}
 			environment.bandwidthControl.didUseBandwidth()
 			return environment.conversionRatesService
 				.fetchConversionRates()
@@ -60,6 +63,7 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 			)
 		case let .conversionRatesResponse(.failure(error)):
 			// TODO: Handle Errors
+			logger.error("Failed to fetch conversionRates (error: \(error))")
 			return .none
 		case .dataPersistenceAction(.setFromPersistedDataIfNil):
 			guard let rates = state.rates else {

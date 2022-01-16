@@ -12,6 +12,12 @@ struct APIError: Equatable, Error, Decodable {
 	let info: String
 }
 
+extension APIError: CustomStringConvertible {
+	var description: String {
+		"code: \(code), info: \(info)"
+	}
+}
+
 struct CurrencyLayerAPIResponse: Decodable {
 	enum APIResponseKeys: String, CodingKey {
 		case success, error, timestamp, source, quotes
