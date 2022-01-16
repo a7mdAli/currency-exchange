@@ -23,6 +23,11 @@
 "rootViewErrorMessage" = "下記のリフレッシュボタンをタップし、再度お試しください。";
 
 //
+// MARK: CurrencyExchangeView
+//
+"copyConvertedAmount" = "為替額をコピー";
+
+//
 // MARK: Common
 //
 

@@ -99,6 +99,13 @@ struct CurrencyExchangeListView: View {
 						convertedAmount: convertRateViewStore.state.convertedAmount(for: rate),
 						specifier: specifier
 					)
+					.contextMenu {
+						Button {
+							UIPasteboard.general.string = "\(convertRateViewStore.state.convertedAmount(for: rate))"
+						} label: {
+							Text(R.string.localizable.copyExchangeAmount())
+						}
+					}
 				}
 			}
 			.listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 0, trailing: 0))

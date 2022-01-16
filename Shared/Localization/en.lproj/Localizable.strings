@@ -23,6 +23,11 @@
 "rootViewErrorMessage" = "Try again by tapping on the refresh button bellow.";
 
 //
+// MARK: CurrencyExchangeView
+//
+"copyExchangeAmount" = "Copy Exchange Amount";
+
+//
 // MARK: Common
 //
 
