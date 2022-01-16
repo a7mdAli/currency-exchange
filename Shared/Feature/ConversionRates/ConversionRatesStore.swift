@@ -15,13 +15,15 @@ private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: 
 struct ConversionRatesState: Equatable {
 	var rates: ConversionRates?
 	var convertRateState: ConvertRateState = .init()
+	@BindableState var isFetching: Bool = false
 	var alert: AlertState<ConversionRatesAction>?
 }
 
-enum ConversionRatesAction: Equatable {
+enum ConversionRatesAction: Equatable, BindableAction {
 	case fetchConversionRates
 	case conversionRatesResponse(Result<ConversionRates, APIError>)
 	case dismissAlert
+	case binding(BindingAction<ConversionRatesState>)
 	case dataPersistenceAction(DataPersistenceAction)
 	case convertRateAction(ConvertRateAction)
 }
@@ -51,10 +53,12 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 				logger.debug("Bandwidth is restricted!")
 				return .none
 			}
+			state.isFetching = true
 			environment.bandwidthControl.didUseBandwidth()
 			return environment.conversionRatesService
 				.fetchConversionRates()
 				.catchToEffect(ConversionRatesAction.conversionRatesResponse)
+				.append(Effect(value: .set(\.$isFetching, false)))
 				.receive(on: environment.mainQueue)
 				.eraseToEffect()
 		case let .conversionRatesResponse(.success(conversionRates)):
@@ -74,6 +78,8 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 		case .dismissAlert:
 			state.alert = nil
 			return .none
+		case .binding(_):
+			return .none
 		case .dataPersistenceAction(.setFromPersistedDataIfNil):
 			guard let rates = state.rates else {
 				return .none
@@ -85,6 +91,7 @@ let conversionRatesReducer = Reducer<ConversionRatesState, ConversionRatesAction
 			return .none
 		}
 	}
+	.binding()
 )
 
 // MARK: - Data Persistence

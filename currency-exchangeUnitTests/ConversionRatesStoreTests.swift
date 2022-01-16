@@ -66,7 +66,9 @@ class ConversionRatesStoreTests: XCTestCase {
 		)
 
 		XCTContext.runActivity(named: "Confirm successful API fetch request & data persistence") { _ in
-			store.send(.fetchConversionRates)
+			store.send(.fetchConversionRates) {
+				$0.isFetching = true
+			}
 			scheduler.advance(by: 0.3)
 
 			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
@@ -79,6 +81,10 @@ class ConversionRatesStoreTests: XCTestCase {
 
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
 			assertPersistenceController(persistenceController, contains: Self.conversionRates)
+
+			store.receive(.binding(.set(\.$isFetching, false))) {
+				$0.isFetching = false
+			}
 		}
 	}
 
@@ -103,7 +109,9 @@ class ConversionRatesStoreTests: XCTestCase {
 
 		// test
 		XCTContext.runActivity(named: "Confirm failed API request with error") { _ in
-			store.send(.fetchConversionRates)
+			store.send(.fetchConversionRates) {
+				$0.isFetching = true
+			}
 			scheduler.advance(by: 0.3)
 
 			// expected action to be received as a result of the fetch action
@@ -115,6 +123,10 @@ class ConversionRatesStoreTests: XCTestCase {
 					message: TextState("\(Self.apiError.info)"),
 					dismissButton: .default(TextState(R.string.localizable.alertOKButtonTitle()), action: .send(.dismissAlert))
 				)
+			}
+
+			store.receive(.set(\.$isFetching, false)) {
+				$0.isFetching = false
 			}
 		}
 	}
@@ -141,7 +153,9 @@ class ConversionRatesStoreTests: XCTestCase {
 		// test
 		XCTContext.runActivity(named: "Confirm bandwidth restriction is applied on fetch") { _ in
 			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
-			store.send(.fetchConversionRates)
+			store.send(.fetchConversionRates) {
+				$0.isFetching = true
+			}
 			XCTAssertTrue(store.environment.bandwidthControl.isRestricted)
 			scheduler.advance(by: 0.3)
 
@@ -154,9 +168,12 @@ class ConversionRatesStoreTests: XCTestCase {
 			}
 
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+
+			store.receive(.set(\.$isFetching, false)) {
+				$0.isFetching = false
+			}
 		}
 
-		
 		XCTContext.runActivity(named: "Confirm unsuccessful fetch when bandwidth is restricted") { _ in
 			// since there is no effect to receive this ensures we didn't initiate a fetch request
 			// if a `conversionRatesResponse` effect is received when we're not handling it, the test will fail
@@ -168,7 +185,9 @@ class ConversionRatesStoreTests: XCTestCase {
 			scheduler.advance(by: 1.0)
 			XCTAssertFalse(store.environment.bandwidthControl.isRestricted)
 			// simulate fetch non-restricted fetch
-			store.send(.fetchConversionRates)
+			store.send(.fetchConversionRates) {
+				$0.isFetching = true
+			}
 			scheduler.advance(by: 0.3)
 
 			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
@@ -180,6 +199,10 @@ class ConversionRatesStoreTests: XCTestCase {
 			}
 
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates)))
+			
+			store.receive(.set(\.$isFetching, false)) {
+				$0.isFetching = false
+			}
 		}
 	}
 
@@ -226,7 +249,9 @@ class ConversionRatesStoreTests: XCTestCase {
 		}
 
 		XCTContext.runActivity(named: "Confirm persisted data is not overwritten by a failed fetch request") { _ in
-			store.send(.fetchConversionRates)
+			store.send(.fetchConversionRates) {
+				$0.isFetching = true
+			}
 
 			scheduler.advance(by: 0.3)
 
@@ -237,6 +262,10 @@ class ConversionRatesStoreTests: XCTestCase {
 					message: TextState("\(Self.apiError.info)"),
 					dismissButton: .default(TextState(R.string.localizable.alertOKButtonTitle()), action: .send(.dismissAlert))
 				)
+			}
+
+			store.receive(.set(\.$isFetching, false)) {
+				$0.isFetching = false
 			}
 		}
 	}
@@ -260,7 +289,9 @@ class ConversionRatesStoreTests: XCTestCase {
 
 		// test
 		XCTContext.runActivity(named: "Confirm successful fetch & data persistence") { _ in
-			store.send(.fetchConversionRates)
+			store.send(.fetchConversionRates) {
+				$0.isFetching = true
+			}
 			scheduler.advance(by: 0.3)
 
 			store.receive(.conversionRatesResponse(.success(Self.conversionRates))) {
@@ -276,8 +307,11 @@ class ConversionRatesStoreTests: XCTestCase {
 			store.receive(.dataPersistenceAction(.persistData(Self.conversionRates))) {
 				$0.rates = Self.conversionRates
 			}
-
 			assertPersistenceController(store.environment.persistenceController, contains: Self.conversionRates)
+
+			store.receive(.set(\.$isFetching, false)) {
+				$0.isFetching = false
+			}
 		}
 
 		XCTContext.runActivity(named: "Ensure fetched data takes precedence to persisted data") { _ in
